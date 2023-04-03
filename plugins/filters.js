@@ -3,5 +3,7 @@ import Vue from 'vue'
 Vue.filter('yyyyMMdd', val => {
     if (typeof val !== 'string' | !val | val === '') return '-'
 
-    return new Date(val).toISOString().substr(0,19)
+    const date = new Date(val)
+
+    return `${date.toISOString().substr(0,10)} ${date.toISOString().substr(11,8)}`
 })
