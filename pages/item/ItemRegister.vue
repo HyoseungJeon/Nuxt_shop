@@ -43,7 +43,6 @@
                 >Submit
             </button>
         <br />
-        <div th:replace="fragments/footer :: footer" />
     </div> <!-- /container -->
 </template>
 

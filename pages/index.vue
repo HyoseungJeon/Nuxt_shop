@@ -1,12 +1,11 @@
 <template>
   <div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeader" />
     <div class="jumbotron">
       <h1>HELLO SHOP</h1>
       <p class="lead">회원 기능</p>
       <p>
         <nuxt-link class="btn btn-lg btn-secondary" to="member/memberRegister">회원 가입</nuxt-link>
-        <nuxt-link class="btn btn-lg btn-secondary" to="member/memberList">회원 목록</nuxt-link>
+        <nuxt-link id="sadcsadc" class="btn btn-lg btn-secondary" to="member/memberList">회원 목록</nuxt-link>
       </p>
       <p class="lead">상품 기능</p>
       <p>
@@ -19,7 +18,6 @@
         <nuxt-link class="btn btn-lg btn-info" to="/order/OrderList">주문 내역</nuxt-link>
       </p>
     </div>
-    <div th:replace="fragments/footer :: footer" />
   </div>
 </template>
 

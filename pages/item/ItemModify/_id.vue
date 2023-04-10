@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-        <div th:replace="fragments/bodyHeader :: bodyHeader" />
         <form th:object="${form}" method="post">
             <!-- id -->
             <input type="hidden" th:field="*{id}" />
@@ -38,7 +37,6 @@
                 type="submit" class="btn btn-primary"
                 @click="clickModifyBtn">Submit</button>
         </form>
-        <div th:replace="fragments/footer :: footer" />
     </div> <!-- /container -->
 </template>
 

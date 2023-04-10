@@ -2,7 +2,6 @@
     <div
         class="container"
         @keyup.enter="clickSearchBtn">
-        <div th:replace="fragments/bodyHeader :: bodyHeader" />
         <div>
             <div 
                 class="form-inline">
@@ -38,8 +37,8 @@
                 </thead>
                 <tbody>
                     <tr
-                        v-for="(order, i) in orderList"
-                        :key="i">
+                        v-for="(order, index) in orderList"
+                        :key="index">
                         <td th:text="${item.id}">{{ order.id }}</td>
                         <td th:text="${item.member.name}">{{ order.memberName }}</td>
                         <td th:text="${item.orderItems[0].item.name}">{{ order.itemName }}</td>
@@ -51,7 +50,7 @@
                             <a
                                 v-show="order.status === 'ORDER'"
                                 class="btn btn-danger"
-                                @click="clickCancelBtn(order)"
+                                @click="clickCancelBtn(index)"
                             >
                                 CANCEL
                             </a>
@@ -60,22 +59,26 @@
                 </tbody>
             </table>
         </div>
-        <div th:replace="fragments/footer :: footer" />
     </div> <!-- /container -->
 </template>
 
 <script>
-import { getOrderList, cancelOrder } from '@/api'
+import { getOrderList } from '@/api'
+import { Order } from '@/model/order'
 export default {
     async asyncData({isDev, route, store, env, params, query, req, res, redirect, error}) {
-        let orderList = []
+        const orderList = []
         const orderSearch = {
             memberName: '',
             orderStatus: ''
         }
         
         await getOrderList().then(res => {
-            orderList = res.data
+            res.data.forEach(order => {
+                const tempOrder = new Order()
+                Object.assign(tempOrder, order)
+                orderList.push(tempOrder)
+            })
         })
 
         return {
@@ -87,15 +90,31 @@ export default {
         return {}
     },
     methods: {
-        async clickCancelBtn({ id }) {
-            await cancelOrder(id)
-            await getOrderList(this.orderSearch).then(res => {
-                this.orderList = res.data
-            })
+        async clickCancelBtn(index) {
+            try {
+                // cant find cancelOrder function, why? 
+                await this.orderList[index].cancelOrder()
+                this.orderList = []
+                await getOrderList(this.orderSearch).then(res => {
+                    res.data.forEach(order => {
+                        const tempOrder = new Order()
+                        Object.assign(tempOrder, order)
+                        this.orderList.push(tempOrder)
+                    })
+                })
+            } catch (error) {
+                console.log(error)
+                window.alert('취소 중 오류가 발생하였습니다. 잠시후 재시도 해주세요.')
+            }
         },
         async clickSearchBtn() {
+            this.orderList = []
             await getOrderList(this.orderSearch).then(res => {
-                this.orderList = res.data
+                res.data.forEach(order => {
+                    const tempOrder = new Order()
+                    Object.assign(tempOrder, order)
+                    this.orderList.push(tempOrder)
+                })
             })
         }
     }

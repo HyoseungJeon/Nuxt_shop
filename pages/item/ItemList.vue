@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-        <div th:replace="fragments/bodyHeader :: bodyHeader" />
         <div>
             <table class="table table-striped">
                 <thead>
@@ -30,7 +29,6 @@
                 </tbody>
             </table>
         </div>
-        <div th:replace="fragments/footer :: footer" />
     </div> <!-- /container -->
 </template>
 

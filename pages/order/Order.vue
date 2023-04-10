@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-        <div th:replace="fragments/bodyHeader :: bodyHeader" />
         <form role="form" action="/order" method="post">
             <div class="form-group">
                 <label for="member">주문회원</label>
@@ -44,7 +43,6 @@
             >Submit</button>
         </form>
         <br />
-        <div th:replace="fragments/footer :: footer" />
     </div> <!-- /container -->
 </template>
 

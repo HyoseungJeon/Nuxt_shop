@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-        <div th:replace="fragments/bodyHeader :: bodyHeader" />
         <div class="form-group">
                 <label th:for="name">이름</label>
                 <input
@@ -29,7 +28,6 @@
                 class="btn btn-primary"
                 @click="clickSubmitBtn">Submit</button>
         <br />
-        <div th:replace="fragments/footer :: footer" />
     </div> <!-- /container -->
 </template>
 
