@@ -1,14 +1,14 @@
-import { cancelOrder } from '@/api'
+import { cancelOrder } from '@/api/order'
 
 export class Order {
-    constructor() {
-        this.id = 0             // 주문ID
-        this.memberName = ''    // 고객명
-        this.itemName = ''      // 상품명
-        this.orderPrice = 0     // 총 주문 금액
-        this.count = 0          // 주문상품 개수
-        this.status = ''        // 주문상태
-        this.orderDate = ''     // 주문일자
+    constructor({ id, memberName, itemName, orderPrice, count, status, orderDate }) {
+        this.id = id || 0       // 주문ID
+        this.memberName = memberName || ''    // 고객명
+        this.itemName = itemName || ''      // 상품명
+        this.orderPrice = orderPrice || 0     // 총 주문 금액
+        this.count = count || 0          // 주문상품 개수
+        this.status = status || ''        // 주문상태
+        this.orderDate = orderDate || ''     // 주문일자
     }
 
     /* 

@@ -32,6 +32,12 @@ export function isEndWithConsonant(korStr) {
     return finalConsonantCode !== 0
 }
 
+/**
+ * 시작날짜, 종료날짜 세팅
+ * 
+ * @param { Number } dayNum 날짜 수
+ * @returns { Date } { startDate, endDate }  
+ */
 export function initRangeDate(dayNum) {
     const baseDate = 2
 
@@ -59,5 +65,23 @@ export function initRangeDate(dayNum) {
     return {
         startDate,
         endDate
+    }
+}
+
+/**
+ * form tag 내 inputs validate 및 alert 노출
+ * 
+ * @param { v-form } form 
+ */
+export function validateForm(form) {
+    const validate = form.validate()
+
+    if (!validate) {
+        // form tag 내 validate false input tags 조회 (validate시 errorBucket에 실패 개수만큼 담김)
+        const falseInputs = form.inputs.filter(input => input.errorBucket.length > 0)
+        // 가장 상위 조회 된 input tag의 첫번쨰 error 메시지 노출
+        const validateMsg =  falseInputs[0].errorBucket[0]
+
+        window.alert(validateMsg)
     }
 }
