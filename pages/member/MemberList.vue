@@ -30,13 +30,13 @@
 </template>
 
 <script>
-import { getMemberList } from '@/api'
+import { getMemberList } from '@/api/order'
 export default {
     async asyncData({isDev, route, store, env, params, query, req, res, redirect, error}) {
         let memberList = []
 
-        await getMemberList().then(response => {
-            memberList = response.data
+        await getMemberList().then(data => {
+            memberList = data
         })
 
         return {

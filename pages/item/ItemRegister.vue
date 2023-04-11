@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { registerItem } from '@/api'
+import { registerItem } from '@/api/order'
 export default {
     data() {
         return {

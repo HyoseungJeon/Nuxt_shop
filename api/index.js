@@ -1,4 +1,7 @@
 import axios from 'axios'
+import { userStore } from '@/store/user'
+
+let pendingRequestNum = 0
 
 const instance = axios.create({
     baseURL: 'http://localhost:8080/',
@@ -7,52 +10,69 @@ const instance = axios.create({
     }
 })
 
-export function getMember(id) {
-    return instance.get(`members/${id}`)
+instance.interceptors.request.use(
+    (config) => {
+        pendingRequestNum++
+
+        // store userId get
+        // instance.headers.userId = store.getters.userId
+        instance.headers.userId = userStore.userId || ''
+
+        // spinner start
+        
+        return config
+    },
+    (error) => {
+        console.log(`Request pending error, error : ${error}`)
+        pendingRequestNum--
+        return Promise.reject(error)
+    }
+)
+
+const statusProcess = {
+    '400': function() {
+        window.alert('400 status, plz check your request')
+        return Promise.reject(new Error('Bad Request'))
+    }, 
+    '401': () => {
+        window.alert('401 status, plz check your auth')
+        return Promise.reject(new Error('Unauthorized'))
+    }, 
+    '409': function(message) {
+        window.alert(message)
+        return Promise.reject(new Error('Conflict'))
+    },
+    '422': (message) => {
+        window.alert(message)
+        return Promise.reject(new Error('Unprocessable'))
+    }
 }
 
-export function registerMember(member) {
-    return instance.post(`members`,
-        member
-    )
-}
+instance.interceptors.response.use(
+    (response) => {
+        pendingRequestNum--
+        const data = response.data
 
-export function getMemberList() {
-    return instance.get(`members`)
-}
-
-export function registerItem(item) {
-    return instance.post(`items`, item)
-}
-
-export function getItemList() {
-    return instance.get(`items`)
-}
-
-export function getItemDetail(itemId) {
-    return instance.get(`items/${itemId}`)
-}
-
-export function modifyItem(itemId, item) {
-    return instance.patch(`items/${itemId}`, item)
-}
-
-export function order(memberId, itemId, count) {
-    return instance.post(`orders`, {
-        memberId,
-        itemId,
-        count
-    })
-}
-
-export function getOrderList(params) {
-    return instance.get(`orders`, 
-        {
-            params
+        if(pendingRequestNum === 0) {
+            // spinner stop
         }
-    )
-}
 
-export function cancelOrder(orderId) {
-    return instance.post(`orders/${orderId}/cancel`)
-}
+        if(!data) return Promise.reject(new Error(`No Data`))
+
+        return data
+    },
+    (error) => {
+        pendingRequestNum--
+
+        if(pendingRequestNum === 0) {
+            // spinner stop
+        }
+
+        const { status, data } = error.response
+        // const errUrl = error.config.url
+
+        return statusProcess[status]?.(data.message) ?? Promise.reject(new Error(error))
+    }
+)
+
+export default instance

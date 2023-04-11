@@ -47,18 +47,18 @@
 </template>
 
 <script>
-import { getItemList, getMemberList, order } from '@/api'
+import { getItemList, getMemberList, order } from '@/api/order'
 
 export default {
     async asyncData({isDev, route, store, env, params, query, req, res, redirect, error}) {
         let itemList = []
         let memberList = []
 
-        await getItemList().then(response => {
-            itemList = response.data
+        await getItemList().then(data => {
+            itemList = data
         })
-        await getMemberList().then(response => {
-            memberList = response.data
+        await getMemberList().then(data => {
+            memberList = data
         })
 
         return {

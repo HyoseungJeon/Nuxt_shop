@@ -41,12 +41,12 @@
 </template>
 
 <script>
-import { getItemDetail, modifyItem } from '@/api'
+import { getItemDetail, modifyItem } from '@/api/order'
 export default {
     async asyncData({isDev, route, store, env, params, query, req, res, redirect, error}) {
         const itemId = params.id
         let item = {}
-        await getItemDetail(itemId).then(res => { item = res.data })
+        await getItemDetail(itemId).then(data => { item = data })
         return {
             itemId,
             item

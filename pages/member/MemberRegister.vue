@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { registerMember } from '@/api'
+import { registerMember } from '@/api/order'
 export default {
     data() {
         return {

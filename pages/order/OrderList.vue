@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { getOrderList } from '@/api'
+import { getOrderList } from '@/api/order'
 import { Order } from '@/model/order'
 export default {
     async asyncData({isDev, route, store, env, params, query, req, res, redirect, error}) {
@@ -73,8 +73,8 @@ export default {
             orderStatus: ''
         }
         
-        await getOrderList().then(res => {
-            res.data.forEach(order => {
+        await getOrderList().then(data => {
+            data.forEach(order => {
                 const tempOrder = new Order()
                 Object.assign(tempOrder, order)
                 orderList.push(tempOrder)
@@ -94,9 +94,10 @@ export default {
             try {
                 // cant find cancelOrder function, why? 
                 await this.orderList[index].cancelOrder()
+
                 this.orderList = []
-                await getOrderList(this.orderSearch).then(res => {
-                    res.data.forEach(order => {
+                await getOrderList(this.orderSearch).then(data => {
+                    data.forEach(order => {
                         const tempOrder = new Order()
                         Object.assign(tempOrder, order)
                         this.orderList.push(tempOrder)
@@ -109,8 +110,8 @@ export default {
         },
         async clickSearchBtn() {
             this.orderList = []
-            await getOrderList(this.orderSearch).then(res => {
-                res.data.forEach(order => {
+            await getOrderList(this.orderSearch).then(data => {
+                data.forEach(order => {
                     const tempOrder = new Order()
                     Object.assign(tempOrder, order)
                     this.orderList.push(tempOrder)
