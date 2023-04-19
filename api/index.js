@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { userStore } from '@/store/user'
+// import { userStore } from '@/store/user'
 
 let pendingRequestNum = 0
 
@@ -16,9 +16,11 @@ instance.interceptors.request.use(
 
         // store userId get
         // instance.headers.userId = store.getters.userId
-        instance.headers.userId = userStore.userId || ''
+        // instance.headers.userId = userStore.userId || ''
 
         // spinner start
+
+        console.log(config)
         
         return config
     },
@@ -29,24 +31,24 @@ instance.interceptors.request.use(
     }
 )
 
-const statusProcess = {
-    '400': function() {
-        window.alert('400 status, plz check your request')
-        return Promise.reject(new Error('Bad Request'))
-    }, 
-    '401': () => {
-        window.alert('401 status, plz check your auth')
-        return Promise.reject(new Error('Unauthorized'))
-    }, 
-    '409': function(message) {
-        window.alert(message)
-        return Promise.reject(new Error('Conflict'))
-    },
-    '422': (message) => {
-        window.alert(message)
-        return Promise.reject(new Error('Unprocessable'))
-    }
-}
+// const statusProcess = {
+//     '400': function() {
+//         window.alert('400 status, plz check your request')
+//         return Promise.reject(new Error('Bad Request'))
+//     }, 
+//     '401': () => {
+//         window.alert('401 status, plz check your auth')
+//         return Promise.reject(new Error('Unauthorized'))
+//     }, 
+//     '409': function(message) {
+//         window.alert(message)
+//         return Promise.reject(new Error('Conflict'))
+//     },
+//     '422': (message) => {
+//         window.alert(message)
+//         return Promise.reject(new Error('Unprocessable'))
+//     }
+// }
 
 instance.interceptors.response.use(
     (response) => {
@@ -62,16 +64,19 @@ instance.interceptors.response.use(
         return data
     },
     (error) => {
+        console.log(error)
         pendingRequestNum--
 
         if(pendingRequestNum === 0) {
             // spinner stop
         }
 
-        const { status, data } = error.response
+        // const { status, data } = error.response
         // const errUrl = error.config.url
 
-        return statusProcess[status]?.(data.message) ?? Promise.reject(new Error(error))
+        // return statusProcess[status]?.(data.message) ?? Promise.reject(new Error(error))
+
+        return Promise.reject(new Error(error))
     }
 )
 
