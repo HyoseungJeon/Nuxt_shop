@@ -56,6 +56,9 @@
                             </a>
                         </td>
                     </tr>
+                    <tr v-show="orderList.length === 0">
+                        <td colspan="7" style="text-align: center;">조회된 주문이 없습니다.</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -68,55 +71,52 @@ import { Order } from '@/model/order'
 export default {
     async asyncData({isDev, route, store, env, params, query, req, res, redirect, error}) {
         const orderList = []
-        const orderSearch = {
-            memberName: '',
-            orderStatus: ''
-        }
         
         await getOrderList().then(data => {
             data.forEach(order => {
-                const tempOrder = new Order()
-                Object.assign(tempOrder, order)
+                const tempOrder = new Order(order)
                 orderList.push(tempOrder)
             })
         })
 
         return {
-            orderList,
-            orderSearch
+            orderList
         }
     },
     data() {
-        return {}
+        return {
+            orderSearch: {
+                memberName: '',
+                orderStatus: ''
+            }
+        }
     },
     methods: {
-        async clickCancelBtn(index) {
+        async updateOrderList() {
+            const tempOrderList = []
             try {
-                // cant find cancelOrder function, why? 
-                await this.orderList[index].cancelOrder()
-
-                this.orderList = []
                 await getOrderList(this.orderSearch).then(data => {
                     data.forEach(order => {
-                        const tempOrder = new Order()
-                        Object.assign(tempOrder, order)
-                        this.orderList.push(tempOrder)
+                        const tempOrder = new Order(order)
+                        tempOrderList.push(tempOrder)
                     })
                 })
+                this.orderList = tempOrderList
+            } catch (error) {
+                window.alert('주문 리스트 갱신에 실패했습니다.')
+            }
+        },
+        async clickCancelBtn(index) {
+            try {
+                await this.orderList[index].cancelOrder()
+                await this.updateOrderList()
             } catch (error) {
                 console.log(error)
                 window.alert('취소 중 오류가 발생하였습니다. 잠시후 재시도 해주세요.')
             }
         },
         async clickSearchBtn() {
-            this.orderList = []
-            await getOrderList(this.orderSearch).then(data => {
-                data.forEach(order => {
-                    const tempOrder = new Order()
-                    Object.assign(tempOrder, order)
-                    this.orderList.push(tempOrder)
-                })
-            })
+            await this.updateOrderList()
         }
     }
 }
