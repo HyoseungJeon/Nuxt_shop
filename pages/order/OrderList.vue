@@ -42,8 +42,8 @@
                         <td th:text="${item.id}">{{ order.id }}</td>
                         <td th:text="${item.member.name}">{{ order.memberName }}</td>
                         <td th:text="${item.orderItems[0].item.name}">{{ order.itemName }}</td>
-                        <td th:text="${item.orderItems[0].orderPrice}">{{ order.orderPrice }}</td>
-                        <td th:text="${item.orderItems[0].count}">{{ order.count }}</td>
+                        <td th:text="${item.orderItems[0].orderPrice}">{{ order.orderPrice | number }}</td>
+                        <td th:text="${item.orderItems[0].count}">{{ order.count | number }}</td>
                         <td th:text="${item.status}">{{ order.status }}</td>
                         <td th:text="${item.orderDate}">{{ order.orderDate | yyyyMMdd }}</td>
                         <td>
